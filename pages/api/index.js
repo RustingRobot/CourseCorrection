@@ -14,14 +14,20 @@ export default async (req, res) => {
  */
 import { exec } from 'child_process';
 
-var cache = {};
+import fsPromises from 'fs/promises';
+import path from 'path'
 
-export default function handler(req, res) {
-  console.log(cache);
+export default async function handler(req, res) {
+  const filePath = path.join(process.cwd(), 'cache');
+  const jsonData = await fsPromises.readFile(filePath);
+  const cach_file = JSON.parse(jsonData);
+  console.log("cache: " + cach_file);
+
   var url = req.url.slice(5, -1);
-  if (url in cache) {
+  console.log("url: " + url);
+  if (url in cach_file) {
     console.log("in cache")
-    res.status(200).json({"value": cache[url], "cached": true});
+    res.status(200).json({"value": cach_file[url], "cached": true});
     return;
   }{
     console.log("not in cache")
@@ -38,6 +44,7 @@ export default function handler(req, res) {
     }
 
     res.status(200).json(JSON.parse(stdout));
-    cache[url] = JSON.parse(stdout);
+    cach_file[url] = JSON.parse(stdout);
+    fsPromises.writeFile(filePath, JSON.stringify(cach_file));
   });
 }
