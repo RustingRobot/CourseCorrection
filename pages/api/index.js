@@ -17,6 +17,7 @@ import { exec } from 'child_process';
 var cache = {};
 
 export default function handler(req, res) {
+  console.log(cache);
   var url = req.url.slice(5, -1);
   if (url in cache) {
     console.log("in cache")
