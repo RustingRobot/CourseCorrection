@@ -18,10 +18,10 @@ import fsPromises from 'fs/promises';
 import path from 'path'
 
 export default async function handler(req, res) {
-  const filePath = path.join(process.cwd(), 'cache');
+  const filePath = path.join(process.cwd(), 'tmp/cache');
   const jsonData = await fsPromises.readFile(filePath);
   const cach_file = JSON.parse(jsonData);
-  console.log("cache: " + cach_file);
+  console.log("cache: " + JSON.stringify(cach_file));
 
   var url = req.url.slice(5, -1);
   console.log("url: " + url);
