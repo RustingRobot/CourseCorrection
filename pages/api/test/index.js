@@ -1,14 +1,11 @@
-import axios from 'axios';
+import { exec } from 'child_process';
 
-export default async (req, res) => {
-  console.log("test");
-  console.log(req.url);
-  console.log(decodeURIComponent(req.url.slice(5)))
-  const { data } = await axios.get(`https://api.scratch.mit.edu/users/RustingRobot`
-  , {
-    headers: {
-        'User-Agent': 'curl/7.68.0'
+export default function handler(req, res) {
+  exec('curl -X GET https://api.scratch.mit.edu/users/scratchcat', (error, stdout, stderr) => {
+    if (error) {
+      res.status(500).json({ error: stderr });
+      return;
     }
+    res.status(200).json(JSON.parse(stdout));
   });
-  res.json(data);
-};
+}
