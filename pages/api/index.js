@@ -14,12 +14,20 @@ export default async (req, res) => {
  */
 import { exec } from 'child_process';
 
+var cache = {};
+
 export default function handler(req, res) {
-  exec('curl -X GET ' + decodeURIComponent(req.url.slice(5, -1)), (error, stdout, stderr) => {
+  var url = req.url.slice(5, -1);
+  if(url in cache){
+    res.status(200).json(cache[url]);
+    return;
+  }
+  exec('curl -X GET ' + decodeURIComponent(url), (error, stdout, stderr) => {
     if (error) {
       res.status(500).json({ error: stderr });
       return;
     }
     res.status(200).json(JSON.parse(stdout));
+    cache[url] = JSON.parse(stdout);
   });
 }
