@@ -19,7 +19,7 @@ var cache = {};
 export default function handler(req, res) {
   var url = req.url.slice(5, -1);
   if(url in cache){
-    res.status(200).json(cache[url]);
+    res.status(200).json({"value": cache[url], "cached": true});
     return;
   }
   exec('curl -X GET ' + decodeURIComponent(url), (error, stdout, stderr) => {
