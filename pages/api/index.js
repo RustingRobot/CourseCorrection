@@ -19,15 +19,18 @@ var cache = {};
 export default function handler(req, res) {
   var url = req.url.slice(5, -1);
   if (url in cache) {
+    console.log("in cache")
     res.status(200).json({"value": cache[url], "cached": true});
     return;
+  }{
+    console.log("not in cache")
   }
   exec('curl -X GET ' + decodeURIComponent(url), (error, stdout, stderr) => {
     if (error) {
       res.status(500).json({ error: stderr });
       return;
     }
-    
+
     if (JSON.parse(stdout)["response"] == "Too many requests") {
       res.status(200).json(JSON.parse(stdout));
       return;
