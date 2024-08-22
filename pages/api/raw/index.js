@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 
 export default function handler(req, res) {
-  var url = req.url.slice(10, -1);
+  var url = req.url.slice(9, -1);
   console.log(url);
   exec('curl -X GET ' + decodeURIComponent(url), (error, stdout, stderr) => {
     if (error) {
